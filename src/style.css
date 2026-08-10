@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/* ---------- Design tokens ---------- */
+@theme {
+  --color-ink-950: #0C0A09;
+  --color-ink-900: #141110;
+  --color-ink-800: #1D1917;
+  --color-ink-700: #2B2420;
+  --color-paper: #F4ECDD;
+  --color-vermillion: #E14B2E;
+  --color-vermillion-deep: #B83A20;
+  --color-gold: #C9A15F;
+  --color-matcha: #93A86B;
+
+  --font-display: "Shippori Mincho", "Noto Serif JP", serif;
+  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --animate-marquee: marquee 42s linear infinite;
+  --animate-spin-slower: spin-slower 28s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pop: pop .35s cubic-bezier(.2, 1.4, .4, 1) both;
+  --animate-slide-up: slide-up .45s cubic-bezier(.22, 1, .36, 1) both;
+
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @keyframes spin-slower { to { transform: rotate(360deg); } }
+  @keyframes float { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-10px) rotate(-3deg); } }
+  @keyframes pop { 0% { transform: scale(.5); } 100% { transform: scale(1); } }
+  @keyframes slide-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+}
+
+/* ---------- Base ---------- */
+body {
+  background-color: var(--color-ink-950);
+  color: var(--color-paper);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+html { scroll-behavior: smooth; }
+::selection { background: var(--color-vermillion); color: var(--color-paper); }
+:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+::-webkit-scrollbar { width: 10px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-ink-950); }
+::-webkit-scrollbar-thumb { background: var(--color-ink-700); border-radius: 8px; }
+
+/* ---------- Utilitários customizados ---------- */
+@utility container-x {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1.25rem;
+  @media (min-width: 640px) { padding-inline: 1.5rem; }
+}
+@utility text-vertical { writing-mode: vertical-rl; }
+@utility bg-dots {
+  background-image: radial-gradient(currentColor 1px, transparent 1.5px);
+  background-size: 22px 22px;
+}
+@utility bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* ---------- Reveal on scroll ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .8s cubic-bezier(.22, 1, .36, 1), transform .8s cubic-bezier(.22, 1, .36, 1);
+}
+.reveal.revealed { opacity: 1; transform: translateY(0); }
+
+/* ---------- Transições (drawer / modal / toast) ---------- */
+.drawer-enter-active, .drawer-leave-active { transition: opacity .35s ease; }
+.drawer-enter-from, .drawer-leave-to { opacity: 0; }
+.drawer-enter-active .drawer-panel, .drawer-leave-active .drawer-panel { transition: transform .45s cubic-bezier(.22, 1, .36, 1); }
+.drawer-enter-from .drawer-panel, .drawer-leave-to .drawer-panel { transform: translateX(100%); }
+
+.modal-enter-active, .modal-leave-active { transition: opacity .3s ease; }
+.modal-enter-from, .modal-leave-to { opacity: 0; }
+.modal-enter-active .modal-panel, .modal-leave-active .modal-panel { transition: all .35s cubic-bezier(.22, 1, .36, 1); }
+.modal-enter-from .modal-panel, .modal-leave-to .modal-panel { opacity: 0; transform: translateY(24px) scale(.98); }
+
+.toast-enter-active { transition: all .35s cubic-bezier(.2, 1.4, .4, 1); }
+.toast-leave-active { transition: all .25s ease; }
+.toast-enter-from, .toast-leave-to { opacity: 0; transform: translateY(16px); }
